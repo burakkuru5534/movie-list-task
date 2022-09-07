@@ -30,6 +30,7 @@ func HttpService() http.Handler {
 			r.Get("/movies", MovieList)
 			r.Get("/movie", MovieGet)
 			r.Delete("/movies", MovieDelete)
+			r.Get("/movie/select", MovieListByTime)
 		})
 	})
 

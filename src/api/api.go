@@ -195,23 +195,33 @@ func MovieListByTime(w http.ResponseWriter, r *http.Request) {
 
 	if MovieList != nil {
 
-		j := 0
 		for i, _ := range MovieList {
-
-			if MovieList[i].Time+MovieList[j].Time <= flightDuration-30 {
-
-				index1 = i
-				index2 = i + 1
-				break
-			} else {
-				j++
+			for j := 0; j < len(MovieList); j++ {
+				if i == j {
+					continue
+				}
+				if MovieList[i].Time+MovieList[j].Time <= flightDuration-30 {
+					index1 = i
+					index2 = j
+					break
+				}
 			}
+			if (index1 > 0 || index2 > 0) && (index1 != index2) {
+				break
+			}
+
 		}
 	}
 
-	selectedMovies = append(selectedMovies, MovieList[index1])
-	selectedMovies = append(selectedMovies, MovieList[index2])
+	if index1 > 0 || index2 > 0 {
+		selectedMovies = append(selectedMovies, MovieList[index1])
+		selectedMovies = append(selectedMovies, MovieList[index2])
 
-	json.NewEncoder(w).Encode(selectedMovies)
+		json.NewEncoder(w).Encode(selectedMovies)
+
+	} else {
+		json.NewEncoder(w).Encode("No movies founded")
+
+	}
 
 }
